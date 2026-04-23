@@ -1,0 +1,63 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.uv-cache/
+
+# Build output
+.next/
+out/
+dist/
+build/
+*.egg-info/
+.turbo/
+
+# Environment
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Testing
+coverage/
+.coverage
+.pytest_cache/
+.ruff_cache/
+htmlcov/
+
+# Fly.io
+.fly/
+
+# Vercel
+.vercel
+
+# Python
+.mypy_cache/
+.pyright/
+
+# Runtime artifacts (simulation outputs)
+*.vcd
+*.vvp
+*.out
+/tmp/

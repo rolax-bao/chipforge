@@ -1,0 +1,4 @@
+Alembic migrations land in PR #3 (auth + projects schema).
+
+For now this directory only contains the env.py scaffold so that
+`alembic` can be invoked locally without errors.
