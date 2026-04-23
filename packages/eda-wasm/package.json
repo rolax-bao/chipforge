@@ -1,0 +1,15 @@
+{
+  "name": "@chipforge/eda-wasm",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "lint": "echo \"(no lint target yet)\" && exit 0",
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"(no tests yet)\" && exit 0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

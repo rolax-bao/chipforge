@@ -1,0 +1,74 @@
+# Local development stack.
+# Usage: `docker compose -f infra/docker-compose.yml up -d postgres redis minio`
+# App services (web, api) can also run here for end-to-end testing but are
+# typically run via pnpm/uv for hot reload during development.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: chipforge
+      POSTGRES_PASSWORD: chipforge
+      POSTGRES_DB: chipforge
+    ports:
+      - '5432:5432'
+    volumes:
+      - chipforge_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U chipforge']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '6379:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - '9000:9000' # S3 API
+      - '9001:9001' # MinIO console
+    volumes:
+      - chipforge_minio:/data
+    healthcheck:
+      test: ['CMD', 'curl', '-fsS', 'http://localhost:9000/minio/health/live']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: ../apps/api
+      dockerfile: Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+asyncpg://chipforge:chipforge@postgres:5432/chipforge
+      REDIS_URL: redis://redis:6379/0
+      S3_ENDPOINT_URL: http://minio:9000
+      S3_ACCESS_KEY: minioadmin
+      S3_SECRET_KEY: minioadmin
+      S3_BUCKET: chipforge
+      AI_PROVIDER: mock
+      JWT_SECRET: dev-only-change-me
+    ports:
+      - '8000:8000'
+    profiles: ['full']
+
+volumes:
+  chipforge_pg:
+  chipforge_minio:
