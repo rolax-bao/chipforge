@@ -5,7 +5,10 @@
 
 services:
   postgres:
-    image: postgres:16-alpine
+    # pgvector image bundles the `vector` extension; PR #11 will start
+    # using it for RAG embeddings. The plain postgres:16-alpine would
+    # force us to install an APT package inside the container later.
+    image: pgvector/pgvector:pg16
     environment:
       POSTGRES_USER: chipforge
       POSTGRES_PASSWORD: chipforge

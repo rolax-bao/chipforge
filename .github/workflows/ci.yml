@@ -30,11 +30,27 @@ jobs:
       - run: pnpm test
 
   api:
-    name: API (ruff + pyright + pytest)
+    name: API (ruff + pyright + alembic + pytest)
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: apps/api
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: chipforge
+          POSTGRES_PASSWORD: chipforge
+          POSTGRES_DB: chipforge
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U chipforge"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql+asyncpg://chipforge:chipforge@localhost:5432/chipforge
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -48,6 +64,7 @@ jobs:
       - run: uv run ruff check .
       - run: uv run ruff format --check .
       - run: uv run pyright
+      - run: uv run alembic upgrade head
       - run: uv run pytest -q
 
   docker-build:

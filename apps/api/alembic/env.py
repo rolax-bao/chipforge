@@ -1,4 +1,9 @@
-"""Alembic environment. Real target_metadata wired up in PR #3."""
+"""Alembic environment.
+
+Uses the sync psycopg URL (the async asyncpg URL is rewritten at config
+time). ``target_metadata`` is the declarative :class:`Base` metadata so
+Alembic can autogenerate future migrations.
+"""
 
 from __future__ import annotations
 
@@ -7,16 +12,20 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
+
+# Import side-effect: register every ORM model on Base.metadata.
+from chipforge_api import models  # noqa: F401
 from chipforge_api.config import get_settings
+from chipforge_api.db import Base
 
 config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 settings = get_settings()
-config.set_main_option("sqlalchemy.url", settings.database_url.replace("+asyncpg", ""))
+config.set_main_option("sqlalchemy.url", settings.database_url.replace("+asyncpg", "+psycopg"))
 
-target_metadata = None
+target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:
