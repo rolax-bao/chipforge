@@ -24,7 +24,7 @@ class LLMProvider(Protocol):
 
     name: str
 
-    async def chat(
+    def chat(
         self,
         messages: list[Message],
         *,
@@ -32,7 +32,7 @@ class LLMProvider(Protocol):
         temperature: float = 0.2,
         max_tokens: int | None = None,
     ) -> AsyncIterator[str]:
-        """Yield assistant tokens as they are produced."""
+        """Yield assistant tokens as they are produced (async generator)."""
         ...
 
     async def complete(
