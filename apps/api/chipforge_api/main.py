@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from chipforge_api import __version__
 from chipforge_api.config import get_settings
-from chipforge_api.routes import health
+from chipforge_api.routes import ai, health
 
 logger = structlog.get_logger(__name__)
 
@@ -34,6 +34,7 @@ def create_app() -> FastAPI:
     )
 
     app.include_router(health.router)
+    app.include_router(ai.router)
 
     logger.info("app_initialized", version=__version__, ai_provider=settings.ai_provider)
     return app
