@@ -50,16 +50,12 @@ export function AiSidebar() {
             prev.map((x) => (x.id === id ? { ...x, reply: x.reply + token } : x)),
           );
         }
-        setExchanges((prev) =>
-          prev.map((x) => (x.id === id ? { ...x, streaming: false } : x)),
-        );
+        setExchanges((prev) => prev.map((x) => (x.id === id ? { ...x, streaming: false } : x)));
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);
         setExchanges((prev) =>
           prev.map((x) =>
-            x.id === id
-              ? { ...x, streaming: false, error: message || 'request failed' }
-              : x,
+            x.id === id ? { ...x, streaming: false, error: message || 'request failed' } : x,
           ),
         );
       } finally {
@@ -96,9 +92,9 @@ export function AiSidebar() {
           <div className="rounded border border-border bg-background p-3 text-muted">
             <p className="mb-2 font-medium text-foreground">Hello, chip designer 👋</p>
             <p className="text-xs">
-              Ask anything about RTL, testbenches, lint, or waveforms. Responses stream
-              from <code className="mx-1 rounded bg-panel px-1">/ai/chat</code>. Provider
-              selection (mock vs OpenAI) is driven by backend env vars.
+              Ask anything about RTL, testbenches, lint, or waveforms. Responses stream from{' '}
+              <code className="mx-1 rounded bg-panel px-1">/ai/chat</code>. Provider selection (mock
+              vs OpenAI) is driven by backend env vars.
             </p>
           </div>
         )}
@@ -117,8 +113,8 @@ export function AiSidebar() {
                 <pre className="mt-1 whitespace-pre-wrap text-red-400">
                   {x.error}
                   {'\n'}
-                  (Is the API running at NEXT_PUBLIC_API_BASE_URL? With mock provider this
-                  still works offline.)
+                  (Is the API running at NEXT_PUBLIC_API_BASE_URL? With mock provider this still
+                  works offline.)
                 </pre>
               ) : (
                 <pre className="mt-1 whitespace-pre-wrap text-foreground">
